@@ -45,7 +45,7 @@ export default function RecitingCorrection( {teachers, sessions} ) {
 
   return (
   <div id='RC'>
-    <Container disableGutters id="RC" maxWidth="sm" sx={{ 
+    <Container disableGutters id="RC" maxWidth="md" sx={{ 
       px:1,
       py: 4,
       display: {xs:"flex",sm:'none'},

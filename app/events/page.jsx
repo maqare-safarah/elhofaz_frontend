@@ -45,7 +45,7 @@ export default function Contact() {
   useEffect(() => {
     (async function () {
       let res = await getSetting();
-      console.log(res.data)
+      // console.log(res.data)
       count3.current = res.data
       setSetting(res.data);
     })();
