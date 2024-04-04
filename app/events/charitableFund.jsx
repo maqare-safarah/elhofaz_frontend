@@ -60,6 +60,7 @@ export default function CharitableFund({ setting,data, setError, setLoading, set
           px:1,
           backgroundColor: "#bb9457",
         }}>
+          <Container maxWidth={'md'}>
         <Typography
           variant="h4"
           align="center"
@@ -101,7 +102,7 @@ export default function CharitableFund({ setting,data, setError, setLoading, set
           </Paper></Box></Container> */}
   
         {/* <Box> */}
-          <Container maxWidth={'md'}>
+          
               <Box sx={{
                 display: 'flex',
                 justifyContent: 'center',
