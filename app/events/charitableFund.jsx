@@ -150,7 +150,7 @@ export default function CharitableFund({ setting,data, setError, setLoading, set
                     </FormControl> */}
                     
           {/* +249112217441 */}
-                    <Container sx={{display:'flex',justifyContent:'center', px:0}}>
+                    <Container sx={{display:'flex',justifyContent:'center', px:0,my:2}}>
                     {/* mbok */}
 
                     <Box flexGrow={1} border={'solid 1px'} color={'white'} bgcolor={'#432818'} mx={0}>
@@ -229,10 +229,11 @@ export default function CharitableFund({ setting,data, setError, setLoading, set
 
                     
                     </Box></Container>
-                    <Divider sx={{backgroundColor:'white',mt:2}}></Divider><br></br>
+                    <Divider sx={{backgroundColor:'white'}}></Divider><br></br>
                     <Container sx={{display:'flex',
-                                justifyContent:'left',
-                                mt:2}}>
+                                justifyContent:'center',
+                                
+                                mb:3}}>
                     <Typography  textAlign={'left'}  flexGrow={1} sx={{mt: 1,
                       
                       marginBottom: 1,}}> رقم الواتساب</Typography>
