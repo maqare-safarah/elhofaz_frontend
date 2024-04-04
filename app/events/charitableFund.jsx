@@ -80,7 +80,7 @@ export default function CharitableFund({ setting,data, setError, setLoading, set
            variant="body6" paragraph> على من يرغب بأن يساعد البرنامج في دعم الحوجات تحويل المبلغ المراد المساهمة به في اي من الحسابات ادناه. ومن ثم ارسال الاشعار الى رقم الواتساب الموجود اسفل القائمة (اضغط على الرقم ليتم تحويلك الى الواتساب مباشرة).
            واخيرا ادخال المبلغ المرسل داخل فورمة بيانات الصندوق 
         </Typography>
-        <Container>
+        {/* <Container>
         <Box pb={8} sx={{
                 display: 'flex',
                 justifyContent: 'center',
@@ -97,99 +97,11 @@ export default function CharitableFund({ setting,data, setError, setLoading, set
             py: 2,
             width: "100%",
           }}>
-            <Typography variant="h6"  className="text-2xl mb-4 text-center" my={2} fontSize={18}>حساب بنك الخرطوم</Typography>
-
-          <Container sx={{display:'flex',
-            justifyContent:'left',}}>
-            <Typography flexGrow={1} textAlign={'left'} sx={{
             
-            mt: 1,
-            mx:2,
-            marginBottom: 1,
-            
-            }}>رقم الحساب  </Typography>
-            <Typography flexGrow={1} textAlign={'left'} sx={{                
-            mt: 1,
-            marginBottom: 1,
-            
-            fontStyle:'bold'
-          }}> {setting.account_number} </Typography></Container>
-
-
-          <Container sx={{display:'flex',
-            justifyContent:'left',}}>
-          <Typography flexGrow={1} textAlign={'left'} sx={{
-            
-            mt: 1,
-            mx:2,
-            marginBottom: 1,
-            
-          }}>اسم الحساب  </Typography>
-                    <Typography textAlign={'left'} flexGrow={1} sx={{
-                      
-                      mt: 1,
-                      marginBottom: 1,
-                      
-          }}> {setting.account_name}</Typography></Container>
-
-          <Typography className="text-2xl mb-4 text-center" my={2} variant="h6" fontSize={18} >حساب IBAN</Typography>
-
-          <Container sx={{display:'flex',
-            justifyContent:'left',}}>
-          <Typography flex={1} textAlign={'left'} sx={{
-            
-            mt: 1,
-            mx:2,
-            marginBottom: 1,
-            
-          }}>رقم الحساب  </Typography>
-                    <Typography flex={2} textAlign={'center'} sx={{
-                      
-                      mt: 1,
-                      marginBottom: 1,
-                      
-                      fontSize:14
-          }}> {setting.account_iban} </Typography></Container>
-
-          <Container sx={{display:'flex',
-            justifyContent:'left',}}>
-          <Typography flexGrow={1} textAlign={'left'} sx={{
-            
-            mt: 1,
-            mx:2,
-            marginBottom: 1,
-            
-          }}>اسم الحساب  </Typography>
-                    <Typography textAlign={'left'} flexGrow={1} sx={{
-                      
-                      mt: 1,
-                      marginBottom: 1,
-                      
-          }}> {setting.account_name}</Typography></Container>
-
-          <Divider sx={{backgroundColor:'white'}}></Divider><br></br>
-          <Container sx={{display:'flex',
-                      justifyContent:'left',}}>
-          <Typography  textAlign={'center'}  flexGrow={1}> رقم الواتساب</Typography>
-
-                    <Typography  textAlign={'center'} flexGrow={1} sx={{
-                      
-                      
-                      backgroundColor:'white',
-                      color:'#432818',
-                      border:'2px solid white',
-                      borderRadius:'5px',
-                      
-                      ":hover":{
-                        backgroundColor:'#432818',
-                        color:'white'
-                      }
-          }}><a href={`https://wa.me/${setting.account_whatsapp}?text=`} target='_blank' style={{}}>{setting.account_whatsapp
-        }</a></Typography></Container>
-          </Paper></Box></Container>
+          </Paper></Box></Container> */}
   
         {/* <Box> */}
-          <Container>
+          <Container maxWidth={'md'}>
               <Box sx={{
                 display: 'flex',
                 justifyContent: 'center',
@@ -237,6 +149,111 @@ export default function CharitableFund({ setting,data, setError, setLoading, set
                     </FormControl> */}
                     
           {/* +249112217441 */}
+                    <Container sx={{display:'flex',justifyContent:'center', px:0}}>
+                    {/* mbok */}
+
+                    <Box flexGrow={1} border={'solid 1px'} color={'white'} bgcolor={'#432818'} mx={0}>
+                    <Typography variant="h6"  className="text-2xl mb-4 text-center" my={2} fontSize={18}>حساب بنكك </Typography>
+
+                    <Container sx={{display:'flex',
+                      justifyContent:'left',}}>
+                      {/* <Typography flexGrow={1} textAlign={'left'} sx={{
+                      
+                      mt: 1,
+                      
+                      marginBottom: 1,
+                      
+                      }}>رقم الحساب  </Typography> */}
+                      <Typography flexGrow={1} textAlign={'center'} sx={{                
+                      mt: 1,
+                      marginBottom: 1,
+                      
+                      fontStyle:'bold'
+                    }}> {setting.account_number} </Typography></Container>
+
+
+                    <Container sx={{display:'flex',
+                      justifyContent:'left',}}>
+                    {/* <Typography flexGrow={1} textAlign={'left'} sx={{
+                      
+                      mt: 1,
+                      
+                      marginBottom: 1,
+                      
+                    }}>اسم الحساب  </Typography> */}
+                              <Typography textAlign={'center'}
+                              whiteSpace={'nowrap'}  flexGrow={1} fontSize={14} sx={{
+                                
+                                mt: 1,
+                                marginBottom: 1,
+                                
+                    }}> {setting.account_name}</Typography></Container></Box>
+                    {/* IBAN */}
+                    <Box border={'solid 1px '} color={'white'} bgcolor={'#432818'} flexGrow={1} mx={0}>
+                    <Typography className="text-2xl mb-4 text-center" my={2} variant="h6" fontSize={18} >حساب IBAN</Typography>
+
+                    <Container sx={{display:'flex',
+                      justifyContent:'left',}}>
+                    {/* <Typography flex={1} textAlign={'left'} sx={{
+                      
+                      mt: 1,
+                      
+                      marginBottom: 1,
+                      
+                    }}>رقم الحساب  </Typography> */}
+                              <Typography flex={2} textAlign={'center'} sx={{
+                                
+                                mt: 1,
+                                marginBottom: 1,
+                                
+                                fontSize:14
+                    }}> {setting.account_iban} </Typography></Container>
+
+                    <Container sx={{display:'flex',
+                      justifyContent:'left',}}>
+                    {/* <Typography flexGrow={1} textAlign={'left'} sx={{
+                      
+                      mt: 1,
+                      
+                      marginBottom: 1,
+                      
+                    }}>اسم الحساب  </Typography> */}
+                              <Typography textAlign={'center'} flexGrow={1} whiteSpace={'nowrap'}
+                              fontSize={14} sx={{
+                                
+                                mt: 1,
+                                marginBottom: 1,
+                                
+                    }}> {setting.account_name}</Typography></Container>
+
+                    
+                    </Box></Container>
+                    <Divider sx={{backgroundColor:'white',mt:2}}></Divider><br></br>
+                    <Container sx={{display:'flex',
+                                justifyContent:'left',
+                                mt:2}}>
+                    <Typography  textAlign={'left'}  flexGrow={1} sx={{mt: 1,
+                      
+                      marginBottom: 1,}}> رقم الواتساب</Typography>
+
+                    <Typography  textAlign={'center'} flexGrow={1} sx={{
+                      
+                      display:'flex',
+                      alignItems:'center',
+                      justifyContent:'center',
+                      backgroundColor:'#58341f',
+                      color:'white',
+                      border:'2px solid white',
+                      borderRadius:'5px',
+                      
+                      ":hover":{
+                        backgroundColor:'#2b190e',
+                        color:'white'
+                      }
+                      }}><a href={`https://wa.me/${setting.account_whatsapp}?text=`} target='_blank' style={{width:'100%'}}>{setting.account_whatsapp
+                    }</a></Typography>
+                    </Container>
+                    <Divider sx={{backgroundColor:'white'}}></Divider><br></br>
                     <TextField
                             id="outlined-basic"
                             onChange={(e) => setAmount(e.target.value)}
