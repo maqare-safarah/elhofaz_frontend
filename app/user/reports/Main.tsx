@@ -3,6 +3,8 @@ import ReportCard from "@/app/components/reportsCard";
 import { QuranJizus } from "@/lib/quran-models";
 import { Box, Container, Grid, Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Stack, FormControlLabel, Checkbox, Typography, Divider } from "@mui/material";
 import React from "react";
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 let cards = [
   {
@@ -127,8 +129,9 @@ const MainPage = () => {
             <Button variant="contained" color="primary" onClick={() => { addReport("PREV_JIZU_REVIEW") }}>مراجعة السابق</Button>
             <Button variant="contained" color="primary" onClick={() => { addReport("OLD_JIZU_REVIEW") }}>مراجعة القديم</Button>
             <Button variant="contained" color="primary" onClick={() => { addReport("JIZU_TEST") }}>العرض الاختباري</Button>
-            <Button variant="contained" color="primary" onClick={() => { addReport("STAGE_TEST") }}>العرض المرحلي</Button>
-            <Button variant="contained" color="primary" onClick={() => { addReport("HEAVY_REVIEW") }}>المراجعة المكثفة</Button>
+            <Button variant="contained" color="primary" onClick={() => { addReport("STAGE_TEST") }}>عرض الاجزاء</Button>
+            <Button variant="contained" color="primary" onClick={() => { addReport("NORMAL_REPEAT") }}>التكرار العادي</Button>
+            <Button variant="contained" color="primary" onClick={() => { addReport("HEAVY_REPEAT") }}>التكرار المكثفة</Button>
           </Stack>
         </DialogContent>
         <DialogActions>
@@ -161,11 +164,11 @@ const MainPage = () => {
             <Stack direction={'row'} justifyContent={'space-between'} className="w-full" mt={1}>
               <Button variant="outlined" size="small" color="primary" onClick={() => {
                 if (currentJizu > 1) setCurrentJizu(currentJizu - 1)
-              }}>السابق</Button>
+              }}><ChevronRightIcon /></Button>
               <Box>الجزء {currentJizu}</Box>
               <Button variant="outlined" size="small" color="primary" onClick={() => {
                 if (currentJizu < 30) setCurrentJizu(currentJizu + 1)
-              }}>التالي</Button>
+              }}><ChevronLeftIcon /></Button>
             </Stack>
             <Grid container columns={5} mt={1}>
               {QuranJizus[currentJizu] && Array((QuranJizus[currentJizu].endPage || 0) - (QuranJizus[currentJizu].page || 0) + 1).fill(0).map((value, index) =>
