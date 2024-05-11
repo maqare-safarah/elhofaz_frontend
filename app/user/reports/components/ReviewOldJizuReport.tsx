@@ -1,4 +1,4 @@
-import { Button, Grid, Stack, Typography } from '@mui/material'
+import { Button, Grid, Stack, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 
 interface IProps {
@@ -7,17 +7,26 @@ interface IProps {
 }
 
 function ReviewOldJizuReport(props: IProps) {
+    const [values, setValues] = useState({
+        date: new Date().toDateString(),
+        note: '',
+        lessons: [] as number[],
+    });
+
     const [selectedHizb, setSelectedHizb] = useState<number[]>([]);
     function toggeleSelectedHizb(hizb: number) {
-      if (!selectedHizb.includes(hizb)) {
-        setSelectedHizb([...selectedHizb, hizb])
-      } else {
-        setSelectedHizb([...selectedHizb.filter(p => p != hizb)])
-      }
+        if (!selectedHizb.includes(hizb)) {
+            setSelectedHizb([...selectedHizb, hizb])
+        } else {
+            setSelectedHizb([...selectedHizb.filter(p => p != hizb)])
+        }
     }
 
     return (
         <Stack alignItems={'center'}>
+            <Typography fontWeight="bold" textAlign={'start'} className="w-full">التاريخ:</Typography>
+            <TextField size='small' disabled className='w-full' value={values.date} />
+
             <Typography fontWeight="bold" textAlign={'start'} className="w-full">إختر الاحزاب:</Typography>
             <Grid container columns={5} mt={1}>
                 {Array(30).fill(0).map((value, index) =>
@@ -30,6 +39,10 @@ function ReviewOldJizuReport(props: IProps) {
                     </Grid>
                 )}
             </Grid>
+            
+            <Typography fontWeight="bold" textAlign={'start'} className="w-full">ملاحظات:</Typography>
+            <TextField size='small' multiline rows={4} className='w-full' />
+
             <Stack mt={2} direction={'row'}>
                 <Button variant="contained" color="primary">حفظ التقرير</Button>
                 <Button onClick={props.canceled}>إلغاء</Button>

@@ -9,7 +9,7 @@ interface IProps {
     canceled: () => any,
 }
 
-function OldJizuReviewReport(props: IProps) {
+function PageHafzReport(props: IProps) {
     const [currentJizu, setCurrentJizu] = React.useState(15);
     const [donePages, setDonePages] = React.useState<string[]>([]);
 
@@ -86,4 +86,4 @@ function OldJizuReviewReport(props: IProps) {
     )
 }
 
-export default OldJizuReviewReport
+export default PageHafzReport

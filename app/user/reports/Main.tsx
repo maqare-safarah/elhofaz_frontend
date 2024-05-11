@@ -14,6 +14,7 @@ import NoteReport from "./components/NoteReport";
 import ReviewOldJizuReport from "./components/ReviewOldJizuReport";
 import PrevJizuReviewReport from "./components/ReviewPrevJizuReport";
 import ReviewJizuReport from "./components/ReviewCurrentJizuReport";
+import PageHafzReport from "./components/PageHafzReport";
 
 let cards = [
   {
@@ -184,7 +185,7 @@ const MainPage = () => {
         <DialogTitle textAlign={'center'}>إضافة تقرير حفظ الوجه</DialogTitle>
         <Divider />
         <DialogContent>
-          <PrevJizuReviewReport done={prevJizuReviewDialog.done} canceled={prevJizuReviewDialog.canceled} />
+          <PageHafzReport done={prevJizuReviewDialog.done} canceled={prevJizuReviewDialog.canceled} />
         </DialogContent>
         <DialogActions>
         </DialogActions>

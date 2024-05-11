@@ -1,4 +1,4 @@
-import { Button, Grid, Stack, TextField, Typography } from '@mui/material'
+import { Button, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, Stack, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 
 interface IProps {
@@ -25,20 +25,39 @@ function RepeatHeavyReport(props: IProps) {
             <Typography fontWeight="bold" textAlign={'start'} className="w-full">التاريخ:</Typography>
             <TextField size='small' disabled className='w-full' value={values.date} />
 
-            <Typography fontWeight="bold" textAlign={'start'} className="w-full">ملاحظات:</Typography>
-            <TextField size='small' multiline rows={4} className='w-full' />
-
             <Typography fontWeight="bold" textAlign={'start'} className="w-full">إختر الجزء:</Typography>
             <Grid container columns={5} mt={1}>
                 {Array(30).fill(0).map((value, index) =>
                     <Grid item xs={1} mb={1} gap={1}>
                         <Stack alignItems={'center'}>
-                            <button type="button" onClick={() => { toggeleSelectedJizu(index + 1) }} className={`border rounded-md h-16 w-[90%] ${selectedJizu.includes(index + 1) ? "bg-orange-500" : ""}`} >=</button>
-                            <Typography color={'gray'} fontSize={'0.8em'}>جزء {index + 1}</Typography>
+                            <button type="button" onClick={() => { toggeleSelectedJizu(index + 1) }} className={`border rounded-md h-16 w-[90%] ${selectedJizu.includes(index + 1) ? "bg-orange-500" : ""}`} >
+                                <Typography color={'gray'} fontSize={'0.8em'}>جزء {index + 1}</Typography>
+                            </button>
                         </Stack>
                     </Grid>
                 )}
             </Grid>
+
+
+            <FormControl className='w-full'>
+                <Typography fontWeight="bold" textAlign={'start'} className="w-full">عدد مرات التكرار:</Typography>
+                <RadioGroup
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    defaultValue="female"
+                    name="radio-buttons-group"
+                >
+                    <Stack direction='row'>
+                        <FormControlLabel value={7} control={<Radio />} label="7" />
+                        <FormControlLabel value={8} control={<Radio />} label="8" />
+                        <FormControlLabel value={9} control={<Radio />} label="9" />
+                        <FormControlLabel value={10} control={<Radio />} label="10" />
+                    </Stack>
+                </RadioGroup>
+            </FormControl>
+
+            <Typography fontWeight="bold" textAlign={'start'} className="w-full">ملاحظات:</Typography>
+            <TextField size='small' multiline rows={4} className='w-full' />
+
             <Stack mt={2} direction={'row'}>
                 <Button variant="contained" color="primary">حفظ التقرير</Button>
                 <Button onClick={props.canceled}>إلغاء</Button>
