@@ -1,7 +1,7 @@
 "use client"
 import ReportCard from "@/app/components/reportsCard";
 import { QuranJizus } from "@/lib/quran-models";
-import { Box, Container, Grid, Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Stack, FormControlLabel, Checkbox, Typography, Divider, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { Box, Container, Grid, Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Stack, FormControlLabel, Checkbox, Typography, Divider, FormControl, InputLabel, Select, MenuItem, IconButton } from "@mui/material";
 import React, { useState } from "react";
 import { useDialog } from "@/app/hooks/useDialog";
 import TestJizuReport from "./components/TestJizuReport";
@@ -15,6 +15,7 @@ import ReviewOldJizuReport from "./components/ReviewOldJizuReport";
 import PrevJizuReviewReport from "./components/ReviewPrevJizuReport";
 import ReviewJizuReport from "./components/ReviewCurrentJizuReport";
 import PageHafzReport from "./components/PageHafzReport";
+import { ChevronLeft, ChevronRight, CheckRounded } from "@mui/icons-material";
 
 let cards = [
   {
@@ -108,31 +109,39 @@ const MainPage = () => {
 
 
   return (
-    <div className="#main">
-
-      <p>
-        اسم الطالب: مازن عثمان
-        <br />
-        الحلقة: على ابن ابي طالب
-        <br />
-        المسار: الضبط - الحافظ الجديد
-        <br />
-        الاتجاه: من النهاية للبداية
-        <br />
-        الاتجاه: تنازلى / تصاعدي
-        <br />
-        الصفحة الحالية: 595
-        <br />
-        الجزء الحالي: 30
-        <br />
-        مقدار الحفظ اليومي: نصف وجه
-      </p>
-
-      <Button variant="contained" color="primary" onClick={menuDialog.openDialog}>
-        إضافة تقرير
-      </Button>
+    <div className="grid gap-4">
+      <h1 className="text-2xl font-extrabold text-center">مازن عثمان</h1>
+      <div className="rounded-2xl report-card p-4 flex flex-col">
+        <p>
+          <div className="flex justify-between">
+            <span>الحلقة</span>
+            <span>على ابن ابي طالب</span>
+          </div>
+          <div className="flex justify-between">
+            <span>المسار</span>
+            <span>الضبط - الحافظ الجديد</span>
+          </div>
+          <div className="flex justify-between">
+            <span>الاتجاه</span>
+            <span>من النهاية للبداية</span>
+          </div>
+          <div className="flex justify-between">
+            <span>مقدار الحفظ اليومي</span>
+            <span>نصف وجه</span>
+          </div>
+          <div className="flex justify-between">
+            <span>الصفحة الحالية</span>
+            <span>595</span>
+          </div>
+          <div className="flex justify-between">
+            <span>الجزء الحالي</span>
+            <span>30</span>
+          </div>
+        </p>
+      </div>
 
       {/* كروت معلومات */}
+      <h1 className="text-2xl font-extrabold text-center">كروت المعلومات</h1>
       <Grid container>
         {cards.map((card) => {
           return (
@@ -150,6 +159,39 @@ const MainPage = () => {
           );
         })}
       </Grid>
+
+      <h1 className="text-2xl font-extrabold text-center">التقارير</h1>
+      <h1 className="text-xl font-extrabold text-center">
+        <IconButton color="primary"><ChevronRight /></IconButton>
+        15/05/2024
+        <IconButton color="primary"><ChevronLeft /></IconButton>
+
+      </h1>
+      <Button variant="contained" color="primary" onClick={menuDialog.openDialog}>
+        إضافة تقرير
+      </Button>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="rounded-2xl report-card p-4 flex flex-col gap-2 items-center">
+          <CheckRounded fontSize="large" />
+          <span>حفظ الوجه</span>
+          <span>ص349</span>
+        </div>
+        <div className="rounded-2xl report-card p-4 flex flex-col gap-2 items-center">
+          <CheckRounded fontSize="large" />
+          <span>مراجعة الحالي</span>
+          <span>ص342 - ص338</span>
+        </div>
+        <div className="rounded-2xl report-card p-4 flex flex-col gap-2 items-center">
+          <CheckRounded fontSize="large" />
+          <span>مراجعة السابق</span>
+          <span>جزء 5</span>
+        </div>
+        <div className="rounded-2xl report-card p-4 flex flex-col gap-2 items-center">
+          <CheckRounded fontSize="large" />
+          <span>مراجعة القديم</span>
+          <span>جزء 4</span>
+        </div>
+      </div>
 
       {/* اضافة تقرير */}
       <Dialog

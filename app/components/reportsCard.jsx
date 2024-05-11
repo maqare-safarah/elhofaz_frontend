@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const ReportCard = ({ title, subtitle, content, btnText, btnLink }) => {
   return (
-    <div className=" rounded-2xl report-card" style={{ marginBottom: 10 }}>
+    <div className="rounded-2xl report-card" style={{ marginBottom: 10 }}>
       <div className="px-6 py-8">
         <div className="">
           <div>
