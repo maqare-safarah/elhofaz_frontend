@@ -47,7 +47,7 @@ function ReviewJizuReport(props: IProps) {
 
             <Grid container columns={5} mt={1}>
                 {QuranJizus[currentJizu] && Array((QuranJizus[currentJizu].endPage || 0) - (QuranJizus[currentJizu].page || 0) + 1).fill(0).map((value, index) =>
-                    <Grid item xs={1} mb={1} gap={1}>
+                    <Grid key={index} item xs={1} mb={1} gap={1}>
                         <Stack alignItems={'center'}>
                             {donePages.includes(index + (QuranJizus[currentJizu].page || 0) + "/1") && <button type="button" className={`border rounded-t-md rounded-b-none w-[90%] bg-lime-500`} >=</button>}
                             {!donePages.includes(index + (QuranJizus[currentJizu].page || 0) + "/1") && <button type="button" onClick={() => { toggeleSelectedPage(index + (QuranJizus[currentJizu].page || 0) + "/1") }} className={`border rounded-t-md rounded-b-none w-[90%] ${selectedPages.includes(index + (QuranJizus[currentJizu].page || 0) + "/1") ? "bg-orange-500" : ""}`} >=</button>}

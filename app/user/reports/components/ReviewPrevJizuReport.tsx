@@ -29,7 +29,7 @@ function ReviewPrevJizuReport(props: IProps) {
       <Typography fontWeight="bold" textAlign={'start'} className="w-full">إختر الجزء:</Typography>
       <Grid container columns={5} mt={1}>
         {Array(30).fill(0).map((value, index) =>
-          <Grid item xs={1} mb={1} gap={1}>
+          <Grid key={index} item xs={1} mb={1} gap={1}>
             <Stack alignItems={'center'}>
               <button type="button" onClick={() => { toggeleSelectedJizu(index + 1) }} className={`border rounded-md h-16 w-[90%] ${selectedJizu.includes(index + 1) ? "bg-orange-500" : ""}`} >
                 <Typography color={'gray'} fontSize={'0.8em'}>جزء {index + 1}</Typography>

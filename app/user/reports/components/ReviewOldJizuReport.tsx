@@ -30,7 +30,7 @@ function ReviewOldJizuReport(props: IProps) {
             <Typography fontWeight="bold" textAlign={'start'} className="w-full">إختر الاحزاب:</Typography>
             <Grid container columns={5} mt={1}>
                 {Array(30).fill(0).map((value, index) =>
-                    <Grid item xs={1} mb={1} gap={1}>
+                    <Grid key={index} item xs={1} mb={1} gap={1}>
                         <Stack alignItems={'center'}>
                             <button type="button" onClick={() => { toggeleSelectedHizb(index * 2 + 1) }} className={`border rounded-t-md rounded-b-none w-[90%] ${selectedHizb.includes(index * 2 + 1) ? "bg-orange-500" : ""}`} >=</button>
                             <button type="button" onClick={() => { toggeleSelectedHizb(index * 2 + 2) }} className={`border rounded-t-none rounded-b-md w-[90%] ${selectedHizb.includes(index * 2 + 2) ? "bg-orange-500" : ""}`} >=</button>

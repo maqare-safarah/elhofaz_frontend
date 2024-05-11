@@ -34,7 +34,7 @@ function StageTestReport(props: IProps) {
             <Typography fontWeight="bold" textAlign={'start'} className="w-full">اختر الدرس:</Typography>
             <Grid container columns={3} mt={1}>
                 {Array(20).fill(0).map((value, index) =>
-                    <Grid item xs={1} mb={1} gap={1}>
+                    <Grid key={index} item xs={1} mb={1} gap={1}>
                         <Stack alignItems={'center'}>
                             <button type="button" onClick={() => { toggeleLesson(index + 1) }} className={`border rounded-md h-16 w-[90%] ${values.lessons.includes(index + 1) ? "bg-orange-500" : ""}`} >
                                 <Typography color={'gray'} fontSize={'0.8em'}>تجويد {index + 1}</Typography>
