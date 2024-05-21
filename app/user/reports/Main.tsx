@@ -18,7 +18,7 @@ import PageHafzReport from "./components/PageHafzReport";
 import { ChevronLeft, ChevronRight, CheckRounded } from "@mui/icons-material";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/application-api/http/api-client";
-import { ReportModel, mapStageName, mapTrackName, mapTrackToDirection } from "@/application-api/models/stage";
+import { ReportModel, mapStageName, mapTrackName, mapTrackToDirection, reportTrackMap, tracks } from "@/application-api/models/stage";
 import { last } from 'lodash';
 
 // let cards = [
@@ -282,20 +282,42 @@ const MainPage = () => {
         onClose={menuDialog.done}
       >
         <DialogContent>
-          <Stack gap={1}>
+          {!!userProfileQuery.data?.track && <Stack gap={1}>
             <DialogTitle>اضافة تقرير</DialogTitle>
-            <Button variant="contained" color="primary" onClick={() => { addReport("PAGE_HAFZ") }}>حفظ الوجه</Button>
-            <Button variant="contained" color="primary" onClick={() => { addReport("JIZU_REVIEW") }}>مراجعة الحالي</Button>
-            <Button variant="contained" color="primary" onClick={() => { addReport("PREV_JIZU_REVIEW") }}>مراجعة السابق</Button>
-            <Button variant="contained" color="primary" onClick={() => { addReport("OLD_JIZU_REVIEW") }}>مراجعة القديم</Button>
-            <Button variant="contained" color="primary" onClick={() => { addReport("JIZU_TEST") }}>عرض الاجزاء</Button>
-            <Button variant="contained" color="primary" onClick={() => { addReport("STAGE_TEST") }}>العرض المرحلي</Button>
-            <Button variant="contained" color="primary" onClick={() => { addReport("NORMAL_REPEAT") }}>التكرار العادي</Button>
-            <Button variant="contained" color="primary" onClick={() => { addReport("HEAVY_REPEAT") }}>التكرار المكثف</Button>
-            <Button variant="contained" color="primary" onClick={() => { addReport("JIZU_LESSON") }}>درس تجويد</Button>
-            <Button variant="contained" color="primary" onClick={() => { addReport("PERMISSION") }}>غياب مع إستئذان</Button>
-            <Button variant="contained" color="primary" onClick={() => { addReport("NOTES") }}>ملاحظات</Button>
-          </Stack>
+            {reportTrackMap[userProfileQuery.data.track as keyof typeof tracks].includes('PAGE_HAFZ') &&
+              <Button variant="contained" color="primary" onClick={() => { addReport("PAGE_HAFZ") }}>حفظ الوجه</Button>
+            }
+            {reportTrackMap[userProfileQuery.data.track as keyof typeof tracks].includes('JIZU_REVIEW') &&
+              <Button variant="contained" color="primary" onClick={() => { addReport("JIZU_REVIEW") }}>مراجعة الحالي</Button>
+            }
+            {reportTrackMap[userProfileQuery.data.track as keyof typeof tracks].includes('PREV_JIZU_REVIEW') &&
+              <Button variant="contained" color="primary" onClick={() => { addReport("PREV_JIZU_REVIEW") }}>مراجعة السابق</Button>
+            }
+            {reportTrackMap[userProfileQuery.data.track as keyof typeof tracks].includes('OLD_JIZU_REVIEW') &&
+              <Button variant="contained" color="primary" onClick={() => { addReport("OLD_JIZU_REVIEW") }}>مراجعة القديم</Button>
+            }
+            {reportTrackMap[userProfileQuery.data.track as keyof typeof tracks].includes('JIZU_TEST') &&
+              <Button variant="contained" color="primary" onClick={() => { addReport("JIZU_TEST") }}>عرض الاجزاء</Button>
+            }
+            {reportTrackMap[userProfileQuery.data.track as keyof typeof tracks].includes('STAGE_TEST') &&
+              <Button variant="contained" color="primary" onClick={() => { addReport("STAGE_TEST") }}>العرض المرحلي</Button>
+            }
+            {reportTrackMap[userProfileQuery.data.track as keyof typeof tracks].includes('NORMAL_REPEAT') &&
+              <Button variant="contained" color="primary" onClick={() => { addReport("NORMAL_REPEAT") }}>التكرار العادي</Button>
+            }
+            {reportTrackMap[userProfileQuery.data.track as keyof typeof tracks].includes('HEAVY_REPEAT') &&
+              <Button variant="contained" color="primary" onClick={() => { addReport("HEAVY_REPEAT") }}>التكرار المكثف</Button>
+            }
+            {reportTrackMap[userProfileQuery.data.track as keyof typeof tracks].includes('JIZU_LESSON') &&
+              <Button variant="contained" color="primary" onClick={() => { addReport("JIZU_LESSON") }}>درس تجويد</Button>
+            }
+            {reportTrackMap[userProfileQuery.data.track as keyof typeof tracks].includes('PERMISSION') &&
+              <Button variant="contained" color="primary" onClick={() => { addReport("PERMISSION") }}>غياب مع إستئذان</Button>
+            }
+            {reportTrackMap[userProfileQuery.data.track as keyof typeof tracks].includes('NOTES') &&
+              <Button variant="contained" color="primary" onClick={() => { addReport("NOTES") }}>ملاحظات</Button>
+            }
+          </Stack>}
         </DialogContent>
         <DialogActions>
           <Button onClick={menuDialog.done}>إلغاء</Button>

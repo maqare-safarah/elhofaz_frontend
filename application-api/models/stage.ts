@@ -16,8 +16,8 @@ export function mapStageName(name: keyof typeof stages) {
 }
 
 export const tracks = {
-    'beginner': 'التاهيلي',
-    'mid_level': 'الحافظ الجديد',
+    'beginner': 'الحافظ الجديد',
+    'mid_level': 'التأهيلي',
     'high_level': 'الخاتم',
 }
 
@@ -108,4 +108,44 @@ const reportSample = {
     "created_at": "2024-04-25T21:35:03.000000Z",
     "updated_at": "2024-04-25T21:35:03.000000Z",
     "memorization_part": "up"
+}
+
+type reportType = 'PAGE_HAFZ' |
+    'JIZU_REVIEW' |
+    'PREV_JIZU_REVIEW' |
+    'OLD_JIZU_REVIEW' |
+    'JIZU_TEST' |
+    'STAGE_TEST' |
+    'NORMAL_REPEAT' |
+    'HEAVY_REPEAT' |
+    'JIZU_LESSON' |
+    'PERMISSION' |
+    'TAAHUD' |
+    'NOTES';
+
+export const reportTrackMap: Record<keyof typeof tracks, reportType[]> = {
+    beginner: [
+        'PAGE_HAFZ',
+        'JIZU_TEST',
+        'JIZU_LESSON',
+        'PERMISSION',
+        'NOTES',
+    ],
+    mid_level: [
+        'PAGE_HAFZ',
+        'JIZU_REVIEW',
+        'PREV_JIZU_REVIEW',
+        'OLD_JIZU_REVIEW',
+        'JIZU_TEST',
+        'STAGE_TEST',
+        'NORMAL_REPEAT',
+        'HEAVY_REPEAT',
+        'PERMISSION',
+        'NOTES',
+    ],
+    high_level: [
+        'OLD_JIZU_REVIEW',
+        'PERMISSION',
+        'NOTES',
+    ],
 }
