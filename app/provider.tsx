@@ -10,6 +10,13 @@ import { prefixer } from "stylis";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
+
 //adding rtl direction to mui
 // link https://mui.com/material-ui/guides/right-to-left/
 
@@ -25,6 +32,7 @@ const theme = createTheme({
     fontFamily: "inherit",
   },
 });
+
 // Create rtl cache
 const cacheRtl = createCache({
   key: "muirtl",
@@ -34,13 +42,15 @@ const cacheRtl = createCache({
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <CacheProvider value={cacheRtl}>
-      <ThemeProvider theme={theme}>
-        <SessionProvider>
-          <Navbar />
-          {children}
-          <Footer />
-        </SessionProvider>
-      </ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>
+          <SessionProvider>
+            <Navbar />
+            {children}
+            <Footer />
+          </SessionProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
     </CacheProvider>
   );
 }

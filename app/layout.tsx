@@ -1,8 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Noto_Kufi_Arabic } from "next/font/google";
-
-//provider
 import { Providers } from "./provider";
 
 const inter = Noto_Kufi_Arabic({ subsets: ["arabic"] });
@@ -18,13 +16,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    // <AuthContextProvider>
     <html lang="en" dir="rtl">
       <body className={inter.className}>
         <Providers>{children}</Providers>
-        {/* <Footer /> */}
       </body>
     </html>
-    // </AuthContextProvider>
   );
 }
