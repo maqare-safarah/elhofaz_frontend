@@ -3,6 +3,9 @@ import { Box, Button, Checkbox, Divider, FormControl, FormControlLabel, Grid, In
 import React, { useState } from 'react'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/application-api/http/api-client';
+import { User } from '@/application-api/models/all-models';
 
 interface IProps {
     done: () => any,
@@ -10,6 +13,14 @@ interface IProps {
 }
 
 function PageHafzReport(props: IProps) {
+    const teachersQuery = useQuery({
+        queryKey: ['user-profile'],
+        queryFn: async () => {
+            const { data: { data } } = await api.get('user/user_teachers');
+            return data as User[]
+        }
+    })
+
     const [currentJizu, setCurrentJizu] = React.useState(15);
     const [donePages, setDonePages] = React.useState<string[]>([]);
 
@@ -62,7 +73,7 @@ function PageHafzReport(props: IProps) {
                 <FormControlLabel control={<Checkbox />} label="التكرار 10 مرات متباعدة في الصلوات او أوقات العمل أو أوقات الفراغ" />
                 <Typography fontWeight={'bold'}>العرض:</Typography>
                 <FormControlLabel control={<Checkbox />} label="هل تم عرض الوجه؟" />
-                <FormControl fullWidth>
+                {Array.isArray(teachersQuery.data) && <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">المعلم</InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
@@ -71,11 +82,11 @@ function PageHafzReport(props: IProps) {
                         label="Age"
                     // onChange={handleChange}
                     >
-                        <MenuItem value={10}>شيخ محمد</MenuItem>
-                        <MenuItem value={20}>شيخ عمر</MenuItem>
-                        <MenuItem value={30}>شيخ احمد</MenuItem>
+                        {teachersQuery.data.map(teacher =>
+                            <MenuItem key={teacher.id} value={teacher.id}>{teacher.name}</MenuItem>
+                        )}
                     </Select>
-                </FormControl>
+                </FormControl>}
                 <Divider className="w-full" />
             </Stack>
             <Stack mt={2} direction={'row'}>

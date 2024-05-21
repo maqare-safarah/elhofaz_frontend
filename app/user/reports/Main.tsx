@@ -18,7 +18,7 @@ import PageHafzReport from "./components/PageHafzReport";
 import { ChevronLeft, ChevronRight, CheckRounded } from "@mui/icons-material";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/application-api/http/api-client";
-import { ReportModel, mapStageName, mapTrackName, mapTrackToDirection, reportTrackMap, tracks } from "@/application-api/models/stage";
+import { ReportModel, mapStageName, mapTrackName, mapTrackToDirection, reportTrackMap, tracks } from "@/application-api/models/all-models";
 import { last } from 'lodash';
 
 // let cards = [
@@ -55,19 +55,22 @@ const MainPage = () => {
   const [currentSura, setCurrentSura] = useState('')
 
   function nextDate() {
-
+    console.log(Date.parse(currentDate));
+    setCurrentDate(new Date(Date.parse(currentDate)+1000*60*60*24).toISOString().substring(0, 10));
   };
 
   function previousDate() {
-
+    console.log(Date.parse(currentDate));
+    setCurrentDate(new Date(Date.parse(currentDate)-1000*60*60*24).toISOString().substring(0, 10));
   };
 
   const userProfileQuery = useQuery({
     queryKey: ['user-profile'],
     queryFn: async () => {
       const { data: { data } } = await api.get('user/profile');
+      
       try {
-        const pages = userProfileQuery.data?.last_report?.pages || "[]";
+        const pages = data?.user.last_report?.pages || "[]";
         const last_page = last(JSON.parse(pages)) as number[];
         data.user.last_page = last_page;
         setCurrentPage(last_page as any);
@@ -105,9 +108,9 @@ const MainPage = () => {
   })
 
   const lastReportQuery = useQuery({
-    queryKey: ['last-report'],
+    queryKey: ['last-report', currentDate],
     queryFn: async () => {
-      const { data: { data } } = await api.get('user/profile');
+      const { data: { data } } = await api.get(`user/report?currentDate=${currentDate}`);
       console.log(data);
       return {} as ReportModel
     }

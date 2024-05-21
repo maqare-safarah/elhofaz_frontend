@@ -149,3 +149,58 @@ export const reportTrackMap: Record<keyof typeof tracks, reportType[]> = {
         'NOTES',
     ],
 }
+
+export interface User {
+    id: number
+    name: string
+    username: string
+    phone_code: number
+    phone: number
+    email: string
+    password: string
+    birth_date: string
+    nationality: string
+    residation: string
+    identification: string
+    image: any
+    gender: string
+    status: string
+    can_accept_beginner_user: number
+    can_accept_user: number
+    created_at: string
+    updated_at: string
+    age: number
+    pivot: Pivot
+  }
+  
+  export interface Pivot {
+    group_id: number
+    teacher_id: number
+  }
+  
+
+const userSample = {
+    "id": 1,
+    "name": "ahmed test",
+    "username": "test5212",
+    "phone_code": 20,
+    "phone": 123456974,
+    "email": "a@a.com32212",
+    "password": "$2y$10$4SrZQ.obTKXiGQKekesDZOFHuTKdiP1hYNcdSv3n6Uw.5QMUn.M3W",
+    "birth_date": "2000-05-05",
+    "nationality": "egypt",
+    "residation": "test",
+    "identification": "1234",
+    "image": null,
+    "gender": "male",
+    "status": "active",
+    "can_accept_beginner_user": 1,
+    "can_accept_user": 0,
+    "created_at": "2024-01-22T16:27:35.000000Z",
+    "updated_at": "2024-02-12T14:27:59.000000Z",
+    "age": 23,
+    "pivot": {
+        "group_id": 10,
+        "teacher_id": 1
+    }
+}
