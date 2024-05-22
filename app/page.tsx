@@ -14,8 +14,19 @@ import HomeGoals from "@/app/components/HomePage-Sections/goals";
 import HomeTracks from "@/app/components/HomePage-Sections/tracks";
 import { StackedLineChart, Timeline } from "@mui/icons-material";
 import Up from "@/app/components/Up";
+import { useQuery } from "@tanstack/react-query";
+
+import { api } from "@/application-api/http/api-client";
+import FAQ from "./contact/FAQ";
 
 export default function Home() {
+  const faqQuery = useQuery({
+    queryKey: ['faq'],
+    queryFn: async () => {
+      let { data: { data } } = await api.get('faqs');
+      return data;
+    }
+  })
   return (
     <div
       style={{
@@ -140,6 +151,9 @@ export default function Home() {
           </Container>
         </Container>
       </Box>
+
+      <FAQ faq={faqQuery.data || []} />
+
       <Up />
     </div>
   );

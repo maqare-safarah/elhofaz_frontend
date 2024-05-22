@@ -110,9 +110,8 @@ const MainPage = () => {
   const lastReportQuery = useQuery({
     queryKey: ['last-report', currentDate],
     queryFn: async () => {
-      const { data: { data } } = await api.get(`user/report?currentDate=${currentDate}`);
-      console.log(data);
-      return {} as ReportModel
+      const { data: { data } } = await api.get(`user/report_by_date_and_type?date=${currentDate}&type=daily`);
+      return data as ReportModel
     }
   })
 

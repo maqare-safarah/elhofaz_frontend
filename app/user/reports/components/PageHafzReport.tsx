@@ -3,7 +3,7 @@ import { Box, Button, Checkbox, Divider, FormControl, FormControlLabel, Grid, In
 import React, { useState } from 'react'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from '@/application-api/http/api-client';
 import { User } from '@/application-api/models/all-models';
 
@@ -33,7 +33,19 @@ function PageHafzReport(props: IProps) {
     }
 
     const [selectedPages, setSelectedPages] = React.useState<string[]>([]);
-
+    const saveReportMutation = useMutation({
+        mutationKey: ['save-report'],
+        mutationFn: async () => {
+            await api.post('user/reports', {
+                "type": "daily",
+                "reported_at": new Date().toISOString().substring(0,10),
+                "day": "-",
+                "pages": selectedPages,
+                "teacher_id": "1",
+                "amount_of_pages": "4",
+            })
+        }
+    })
 
     return (
         <Stack alignItems={'center'}>
@@ -90,7 +102,7 @@ function PageHafzReport(props: IProps) {
                 <Divider className="w-full" />
             </Stack>
             <Stack mt={2} direction={'row'}>
-                <Button variant="contained" color="primary">حفظ التقرير</Button>
+                <Button variant="contained" color="primary" onClick={() => { saveReportMutation.mutate() }} disabled={saveReportMutation.isPending}>حفظ التقرير</Button>
                 <Button onClick={props.done}>إلغاء</Button>
             </Stack>
         </Stack>
