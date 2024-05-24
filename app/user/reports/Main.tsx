@@ -83,8 +83,8 @@ const MainPage = () => {
       setCurrentPage(last_page as any);
 
       if (typeof last_page == 'number' && last_page <= 604 && last_page >= 1) {
-        const [jizu, sura] = QuranPages[last_page]
-        setCurrentJizu(jizu)
+        const [sura, ayah] = QuranPages[last_page]
+        setCurrentJizu(QuranJizus.find(j => last_page >= (j.page||-1) && last_page <= (j.endPage||-1))?.title || '')
         setCurrentSura(QuranSuras[sura].nameAr as string)
       }
 

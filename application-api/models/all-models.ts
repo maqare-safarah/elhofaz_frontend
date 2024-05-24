@@ -127,6 +127,7 @@ type reportType = 'PAGE_HAFZ' |
 export const reportTrackMap: Record<keyof typeof tracks, reportType[]> = {
     beginner: [
         'PAGE_HAFZ',
+        'JIZU_REVIEW',
         'JIZU_TEST',
         'JIZU_LESSON',
         'PERMISSION',
