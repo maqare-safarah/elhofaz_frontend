@@ -14,7 +14,7 @@ interface IProps {
 
 function PageHafzReport(props: IProps) {
     const teachersQuery = useQuery({
-        queryKey: ['user-profile'],
+        queryKey: ['user-teachers'],
         queryFn: async () => {
             const { data: { data } } = await api.get('user/user_teachers');
             return data as User[]
@@ -40,7 +40,7 @@ function PageHafzReport(props: IProps) {
                 "type": "daily",
                 "reported_at": new Date().toISOString().substring(0,10),
                 "day": "-",
-                "pages": selectedPages,
+                "pages": JSON.stringify(selectedPages),
                 "teacher_id": "1",
                 "amount_of_pages": "4",
             })

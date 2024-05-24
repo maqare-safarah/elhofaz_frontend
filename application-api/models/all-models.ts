@@ -16,8 +16,8 @@ export function mapStageName(name: keyof typeof stages) {
 }
 
 export const tracks = {
-    'beginner': 'الحافظ الجديد',
-    'mid_level': 'التأهيلي',
+    'beginner': 'التأهيلي',
+    'mid_level': 'الحافظ الجديد',
     'high_level': 'الخاتم',
 }
 
@@ -30,9 +30,9 @@ export function mapTrackName(name: keyof typeof tracks) {
 }
 
 export const trackToDirection = {
-    'beginner': 'من النهاية لأول جزء عم',
-    'mid_level': 'من النهاية للبداية',
-    'high_level': 'من البداية للنهاية',
+    'beginner': 'من النهاية',
+    'mid_level': 'من النهاية',
+    'high_level': 'من البداية',
 }
 
 export function mapTrackToDirection(name: keyof typeof trackToDirection) {
@@ -47,6 +47,7 @@ export interface ReportModel {
     id: number
     chapters: string
     pages: string
+    calc_hifz: string
     new: any
     previous: string
     old: string

@@ -19,7 +19,7 @@ import { ChevronLeft, ChevronRight, CheckRounded } from "@mui/icons-material";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/application-api/http/api-client";
 import { ReportModel, mapStageName, mapTrackName, mapTrackToDirection, reportTrackMap, tracks } from "@/application-api/models/all-models";
-import { last } from 'lodash';
+import { first, last } from 'lodash';
 
 // let cards = [
 //   {
@@ -56,31 +56,36 @@ const MainPage = () => {
 
   function nextDate() {
     console.log(Date.parse(currentDate));
-    setCurrentDate(new Date(Date.parse(currentDate)+1000*60*60*24).toISOString().substring(0, 10));
+    setCurrentDate(new Date(Date.parse(currentDate) + 1000 * 60 * 60 * 24).toISOString().substring(0, 10));
   };
 
   function previousDate() {
     console.log(Date.parse(currentDate));
-    setCurrentDate(new Date(Date.parse(currentDate)-1000*60*60*24).toISOString().substring(0, 10));
+    setCurrentDate(new Date(Date.parse(currentDate) - 1000 * 60 * 60 * 24).toISOString().substring(0, 10));
   };
 
   const userProfileQuery = useQuery({
     queryKey: ['user-profile'],
     queryFn: async () => {
       const { data: { data } } = await api.get('user/profile');
-      
+
       try {
-        const pages = data?.user.last_report?.pages || "[]";
-        const last_page = last(JSON.parse(pages)) as number[];
-        data.user.last_page = last_page;
-        setCurrentPage(last_page as any);
-        if (typeof last_page == 'number' && last_page <= 604 && last_page >= 1) {
-          const [jizu, sura] = QuranPages[last_page]
-          setCurrentJizu(jizu)
-          setCurrentSura(QuranSuras[sura].nameAr as string)
-        }
+        const pages = JSON.parse(data?.user?.last_report?.pages)
+        if(!Array.isArray(pages)) { throw Error('Not Array')}
+        data.user.last_report.pages = pages;
+        data.user.last_report.calc_hifz = parseInt(first((last(pages)||'').split('/'))||'');
       } catch (err) {
-        console.log('err', '' + err)
+        data.user.last_report.pages = [];
+        data.user.last_report.calc_hifz = null;
+      }
+
+      const last_page = data.user.last_report.calc_hifz;
+      setCurrentPage(last_page as any);
+
+      if (typeof last_page == 'number' && last_page <= 604 && last_page >= 1) {
+        const [jizu, sura] = QuranPages[last_page]
+        setCurrentJizu(jizu)
+        setCurrentSura(QuranSuras[sura].nameAr as string)
       }
 
       return data?.user as {
@@ -111,6 +116,15 @@ const MainPage = () => {
     queryKey: ['last-report', currentDate],
     queryFn: async () => {
       const { data: { data } } = await api.get(`user/report_by_date_and_type?date=${currentDate}&type=daily`);
+      try {
+        const pages = JSON.parse(data?.pages)
+        if(!Array.isArray(pages)) { throw Error('Not Array')}
+        data.pages = pages;
+        data.calc_hifz = last(pages)
+      } catch (err) {
+        data.pages = [];
+        data.calc_hifz = null;
+      }
       return data as ReportModel
     }
   })
@@ -173,6 +187,7 @@ const MainPage = () => {
   return (
     <div className="grid gap-4">
       <h1 className="text-2xl font-extrabold text-center">{userProfileQuery.data?.name}</h1>
+      
       <div className="rounded-2xl report-card p-4 flex flex-col">
         {userProfileQuery.isLoading ? 'جاري التحميل ...' : <p>
           <div className="flex justify-between">
@@ -195,6 +210,13 @@ const MainPage = () => {
             <span>المسار</span>
             <span>{mapTrackName(userProfileQuery.data?.track as any)}</span>
           </div>
+        </p>}
+      </div>
+
+      <h1 className="text-2xl font-extrabold text-center">الموقف الحالي</h1>
+
+      <div className="rounded-2xl report-card p-4 flex flex-col">
+        {userProfileQuery.isLoading ? 'جاري التحميل ...' : <p>
           <div className="flex justify-between">
             <span>الاتجاه</span>
             <span>{mapTrackToDirection(userProfileQuery.data?.track as any)}</span>
@@ -256,26 +278,28 @@ const MainPage = () => {
         إضافة تقرير
       </Button>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="rounded-2xl report-card p-4 flex flex-col gap-2 items-center">
-          <CheckRounded fontSize="large" />
-          <span>حفظ الوجه</span>
-          <span>ص349</span>
-        </div>
-        <div className="rounded-2xl report-card p-4 flex flex-col gap-2 items-center">
+        {lastReportQuery.data?.calc_hifz &&
+          <div className="rounded-2xl report-card p-4 flex flex-col gap-2 items-center">
+            <CheckRounded fontSize="large" />
+            <span>حفظ الوجه</span>
+            <span>{first((lastReportQuery.data.calc_hifz||'').split('/'))}</span>
+          </div>
+        }
+        {/* <div className="rounded-2xl report-card p-4 flex flex-col gap-2 items-center">
           <CheckRounded fontSize="large" />
           <span>مراجعة الحالي</span>
           <span>ص342 - ص338</span>
-        </div>
-        <div className="rounded-2xl report-card p-4 flex flex-col gap-2 items-center">
+        </div> */}
+        {/* <div className="rounded-2xl report-card p-4 flex flex-col gap-2 items-center">
           <CheckRounded fontSize="large" />
           <span>مراجعة السابق</span>
           <span>جزء 5</span>
-        </div>
-        <div className="rounded-2xl report-card p-4 flex flex-col gap-2 items-center">
+        </div> */}
+        {/* <div className="rounded-2xl report-card p-4 flex flex-col gap-2 items-center">
           <CheckRounded fontSize="large" />
           <span>مراجعة القديم</span>
           <span>جزء 4</span>
-        </div>
+        </div> */}
       </div>
 
       {/* اضافة تقرير */}
