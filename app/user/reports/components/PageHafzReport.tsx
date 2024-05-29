@@ -8,6 +8,9 @@ import { api } from '@/application-api/http/api-client';
 import { User } from '@/application-api/models/all-models';
 
 interface IProps {
+    params: {
+        memorizedPages: string[],
+    },
     done: () => any,
     canceled: () => any,
 }
@@ -36,14 +39,18 @@ function PageHafzReport(props: IProps) {
     const saveReportMutation = useMutation({
         mutationKey: ['save-report'],
         mutationFn: async () => {
-            await api.post('user/reports', {
-                "type": "daily",
-                "reported_at": new Date().toISOString().substring(0,10),
-                "day": "-",
-                "pages": JSON.stringify(selectedPages),
-                "teacher_id": "1",
-                "amount_of_pages": "4",
-            })
+            try {
+                await api.post('user/reports', {
+                    "type": "daily",
+                    "reported_at": new Date().toISOString().substring(0, 10),
+                    "day": "-",
+                    "pages": JSON.stringify(selectedPages),
+                    "teacher_id": "1",
+                    "amount_of_pages": "4",
+                })
+            } catch(err) {
+                alert('هناك خطأ ما')
+            }
         }
     })
 
@@ -63,10 +70,18 @@ function PageHafzReport(props: IProps) {
                 {QuranJizus[currentJizu] && Array((QuranJizus[currentJizu].endPage || 0) - (QuranJizus[currentJizu].page || 0) + 1).fill(0).map((value, index) =>
                     <Grid key={index} item xs={1} mb={1} gap={1}>
                         <Stack alignItems={'center'}>
-                            {donePages.includes(index + (QuranJizus[currentJizu].page || 0) + "/1") && <button type="button" className={`border rounded-t-md rounded-b-none w-[90%] bg-lime-500`} >=</button>}
-                            {!donePages.includes(index + (QuranJizus[currentJizu].page || 0) + "/1") && <button type="button" onClick={() => { toggeleSelectedPage(index + (QuranJizus[currentJizu].page || 0) + "/1") }} className={`border rounded-t-md rounded-b-none w-[90%] ${selectedPages.includes(index + (QuranJizus[currentJizu].page || 0) + "/1") ? "bg-orange-500" : ""}`} >=</button>}
-                            {donePages.includes(index + (QuranJizus[currentJizu].page || 0) + "/2") && <button type="button" className={`border rounded-t-none rounded-b-md w-[90%] bg-lime-500`} >=</button>}
-                            {!donePages.includes(index + (QuranJizus[currentJizu].page || 0) + "/2") && <button type="button" onClick={() => { toggeleSelectedPage(index + (QuranJizus[currentJizu].page || 0) + "/2") }} className={`border rounded-t-none rounded-b-md w-[90%] ${selectedPages.includes(index + (QuranJizus[currentJizu].page || 0) + "/2") ? "bg-orange-500" : ""}`} >=</button>}
+                            {/* upper half */}
+                            {(props.params.memorizedPages || []).includes(index + (QuranJizus[currentJizu].page || 0) + "/1") ?
+                                <button type="button" className={`border rounded-t-md rounded-b-none w-[90%] bg-lime-500`} >=</button>
+                                :
+                                <button type="button" onClick={() => { toggeleSelectedPage(index + (QuranJizus[currentJizu].page || 0) + "/1") }} className={`border rounded-t-md rounded-b-none w-[90%] ${selectedPages.includes(index + (QuranJizus[currentJizu].page || 0) + "/1") ? "bg-orange-500" : ""}`} >=</button>
+                            }
+                            {/* lower half */}
+                            {(props.params.memorizedPages || []).includes(index + (QuranJizus[currentJizu].page || 0) + "/2") ?
+                                <button type="button" className={`border rounded-t-none rounded-b-md w-[90%] bg-lime-500`} >=</button>
+                                :
+                                <button type="button" onClick={() => { toggeleSelectedPage(index + (QuranJizus[currentJizu].page || 0) + "/2") }} className={`border rounded-t-none rounded-b-md w-[90%] ${selectedPages.includes(index + (QuranJizus[currentJizu].page || 0) + "/2") ? "bg-orange-500" : ""}`} >=</button>
+                            }
                             <Typography color={'gray'} fontSize={'0.8em'}>ص {index + (QuranJizus[currentJizu].page || 0)}</Typography>
                         </Stack>
                     </Grid>
@@ -102,8 +117,8 @@ function PageHafzReport(props: IProps) {
                 <Divider className="w-full" />
             </Stack>
             <Stack mt={2} direction={'row'}>
-                <Button variant="contained" color="primary" onClick={() => { saveReportMutation.mutate() }} disabled={saveReportMutation.isPending}>حفظ التقرير</Button>
-                <Button onClick={props.done}>إلغاء</Button>
+                <Button variant="contained" color="primary" onClick={() => { saveReportMutation.mutate(); props.done() }} disabled={saveReportMutation.isPending}>حفظ التقرير</Button>
+                <Button onClick={props.canceled}>إلغاء</Button>
             </Stack>
         </Stack>
     )

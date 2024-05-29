@@ -19,7 +19,7 @@ import { ChevronLeft, ChevronRight, CheckRounded } from "@mui/icons-material";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/application-api/http/api-client";
 import { ReportModel, mapStageName, mapTrackName, mapTrackToDirection, reportTrackMap, tracks } from "@/application-api/models/all-models";
-import { first, last } from 'lodash';
+import { first, last, min, max, sortBy } from 'lodash';
 
 // let cards = [
 //   {
@@ -51,6 +51,8 @@ import { first, last } from 'lodash';
 const MainPage = () => {
   const [currentDate, setCurrentDate] = useState(new Date().toISOString().substring(0, 10))
   const [currentPage, setCurrentPage] = useState('')
+  const [firstPage, setFirstPage] = useState<string | undefined>('')
+  const [lastPage, setLastPage] = useState<string | undefined>('')
   const [currentJizu, setCurrentJizu] = useState('')
   const [currentSura, setCurrentSura] = useState('')
 
@@ -71,9 +73,9 @@ const MainPage = () => {
 
       try {
         const pages = JSON.parse(data?.user?.last_report?.pages)
-        if(!Array.isArray(pages)) { throw Error('Not Array')}
+        if (!Array.isArray(pages)) { throw Error('Not Array') }
         data.user.last_report.pages = pages;
-        data.user.last_report.calc_hifz = parseInt(first((last(pages)||'').split('/'))||'');
+        data.user.last_report.calc_hifz = parseInt(first((last(pages) || '').split('/')) || '');
       } catch (err) {
         data.user.last_report.pages = [];
         data.user.last_report.calc_hifz = null;
@@ -84,7 +86,7 @@ const MainPage = () => {
 
       if (typeof last_page == 'number' && last_page <= 604 && last_page >= 1) {
         const [sura, ayah] = QuranPages[last_page]
-        setCurrentJizu(QuranJizus.find(j => last_page >= (j.page||-1) && last_page <= (j.endPage||-1))?.title || '')
+        setCurrentJizu(QuranJizus.find(j => last_page >= (j.page || -1) && last_page <= (j.endPage || -1))?.title || '')
         setCurrentSura(QuranSuras[sura].nameAr as string)
       }
 
@@ -112,13 +114,23 @@ const MainPage = () => {
     }
   })
 
+  const memorizesPagesQuery = useQuery({
+    queryKey: ['memorised-pages', currentDate],
+    queryFn: async () => {
+      const { data: { data } } = await api.get(`user/report_pages`) as { data: { data: string[] } };
+      setFirstPage(first(sortBy(data)))
+      setLastPage(last(sortBy(data)))
+      return data
+    }
+  })
+
   const lastReportQuery = useQuery({
     queryKey: ['last-report', currentDate],
     queryFn: async () => {
       const { data: { data } } = await api.get(`user/report_by_date_and_type?date=${currentDate}&type=daily`);
       try {
         const pages = JSON.parse(data?.pages)
-        if(!Array.isArray(pages)) { throw Error('Not Array')}
+        if (!Array.isArray(pages)) { throw Error('Not Array') }
         data.pages = pages;
         data.calc_hifz = last(pages)
       } catch (err) {
@@ -130,7 +142,13 @@ const MainPage = () => {
   })
 
   const menuDialog = useDialog<any>({});
-  const pageHafzDialog = useDialog<any>({});
+  const pageHafzDialog = useDialog<any>({
+    done(data) {
+      userProfileQuery.refetch();
+      lastReportQuery.refetch();
+      memorizesPagesQuery.refetch();
+    },
+  });
   const jizuReviewDialog = useDialog<any>({});
   const prevJizuReviewDialog = useDialog<any>({});
   const oldJizuReviewDialog = useDialog<any>({});
@@ -187,7 +205,7 @@ const MainPage = () => {
   return (
     <div className="grid gap-4">
       <h1 className="text-2xl font-extrabold text-center">{userProfileQuery.data?.name}</h1>
-      
+
       <div className="rounded-2xl report-card p-4 flex flex-col">
         {userProfileQuery.isLoading ? 'جاري التحميل ...' : <p>
           <div className="flex justify-between">
@@ -226,6 +244,14 @@ const MainPage = () => {
             <span>{userProfileQuery.data?.daily_memorization_amount} صفحة</span>
           </div>
           <div className="flex justify-between">
+            <span>الصفحة الاولى</span>
+            <span>{firstPage}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>الصفحة الاخيرة</span>
+            <span>{lastPage}</span>
+          </div>
+          <div className="flex justify-between">
             <span>الصفحة الحالية</span>
             <span>{currentPage}</span>
           </div>
@@ -239,6 +265,8 @@ const MainPage = () => {
           </div>
         </p>}
       </div>
+
+      {/* <pre>{JSON.stringify(sortBy(memorizesPagesQuery.data))}</pre> */}
 
       {/* كروت معلومات
       <h1 className="text-2xl font-extrabold text-center">كروت المعلومات</h1>
@@ -282,7 +310,7 @@ const MainPage = () => {
           <div className="rounded-2xl report-card p-4 flex flex-col gap-2 items-center">
             <CheckRounded fontSize="large" />
             <span>حفظ الوجه</span>
-            <span>{first((lastReportQuery.data.calc_hifz||'').split('/'))}</span>
+            <span>{first((lastReportQuery.data.calc_hifz || '').split('/'))}</span>
           </div>
         }
         {/* <div className="rounded-2xl report-card p-4 flex flex-col gap-2 items-center">
@@ -358,7 +386,7 @@ const MainPage = () => {
         <DialogTitle textAlign={'center'}>إضافة تقرير حفظ الوجه</DialogTitle>
         <Divider />
         <DialogContent>
-          <PageHafzReport done={prevJizuReviewDialog.done} canceled={prevJizuReviewDialog.canceled} />
+          <PageHafzReport params={{ memorizedPages: memorizesPagesQuery.data || [] }} done={pageHafzDialog.done} canceled={pageHafzDialog.canceled} />
         </DialogContent>
         <DialogActions>
         </DialogActions>
