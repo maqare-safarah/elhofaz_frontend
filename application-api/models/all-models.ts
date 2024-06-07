@@ -111,8 +111,8 @@ const reportSample = {
     "memorization_part": "up"
 }
 
-type reportType = 'PAGE_HAFZ' |
-    'JIZU_REVIEW' |
+export type ReportType = 'PAGE_HAFZ' |
+    'CURRENT_JIZU_REVIEW' |
     'PREV_JIZU_REVIEW' |
     'OLD_JIZU_REVIEW' |
     'JIZU_TEST' |
@@ -124,18 +124,25 @@ type reportType = 'PAGE_HAFZ' |
     'TAAHUD' |
     'NOTES';
 
-export const reportTrackMap: Record<keyof typeof tracks, reportType[]> = {
+export const reportTrackMap: Record<keyof typeof tracks, ReportType[]> = {
     beginner: [
         'PAGE_HAFZ',
-        'JIZU_REVIEW',
+        'CURRENT_JIZU_REVIEW',
         'JIZU_TEST',
         'JIZU_LESSON',
         'PERMISSION',
         'NOTES',
+
+        'CURRENT_JIZU_REVIEW',
+        'PREV_JIZU_REVIEW',
+        'OLD_JIZU_REVIEW',
+        'STAGE_TEST',
+        'NORMAL_REPEAT',
+        'HEAVY_REPEAT',
     ],
     mid_level: [
         'PAGE_HAFZ',
-        'JIZU_REVIEW',
+        'CURRENT_JIZU_REVIEW',
         'PREV_JIZU_REVIEW',
         'OLD_JIZU_REVIEW',
         'JIZU_TEST',

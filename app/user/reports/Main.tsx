@@ -13,12 +13,12 @@ import PermissionReport from "./components/PermissionReport";
 import NoteReport from "./components/NoteReport";
 import ReviewOldJizuReport from "./components/ReviewOldJizuReport";
 import PrevJizuReviewReport from "./components/ReviewPrevJizuReport";
-import ReviewJizuReport from "./components/ReviewCurrentJizuReport";
+import ReviewCurrentJizuReport from "./components/ReviewCurrentJizuReport";
 import PageHafzReport from "./components/PageHafzReport";
 import { ChevronLeft, ChevronRight, CheckRounded } from "@mui/icons-material";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/application-api/http/api-client";
-import { ReportModel, mapStageName, mapTrackName, mapTrackToDirection, reportTrackMap, tracks } from "@/application-api/models/all-models";
+import { ReportModel, ReportType, mapStageName, mapTrackName, mapTrackToDirection, reportTrackMap, tracks } from "@/application-api/models/all-models";
 import { first, last, min, max, sortBy } from 'lodash';
 
 // let cards = [
@@ -124,8 +124,8 @@ const MainPage = () => {
     }
   })
 
-  const lastReportQuery = useQuery({
-    queryKey: ['last-report', currentDate],
+  const currentReportQuery = useQuery({
+    queryKey: ['current-report', currentDate],
     queryFn: async () => {
       const { data: { data } } = await api.get(`user/report_by_date_and_type?date=${currentDate}&type=daily`);
       try {
@@ -141,24 +141,68 @@ const MainPage = () => {
     }
   })
 
+  function refetchAll() {
+    userProfileQuery.refetch();
+    currentReportQuery.refetch();
+    memorizesPagesQuery.refetch();
+  }
+
   const menuDialog = useDialog<any>({});
   const pageHafzDialog = useDialog<any>({
     done(data) {
-      userProfileQuery.refetch();
-      lastReportQuery.refetch();
-      memorizesPagesQuery.refetch();
+      refetchAll()
     },
   });
-  const jizuReviewDialog = useDialog<any>({});
-  const prevJizuReviewDialog = useDialog<any>({});
-  const oldJizuReviewDialog = useDialog<any>({});
-  const jizuTestDialog = useDialog<any>({});
-  const stageTestDialog = useDialog<any>({});
-  const normalRepeatDialog = useDialog<any>({});
-  const heavyRepeatDialog = useDialog<any>({});
-  const tajweedLessonDialog = useDialog<any>({});
-  const permissionDialog = useDialog<any>({});
-  const notesDialog = useDialog<any>({});
+  const currentJizuReviewDialog = useDialog<any>({
+    done() {
+      refetchAll()
+    }
+  });
+  const prevJizuReviewDialog = useDialog<any>({
+    done() {
+      refetchAll()
+    }
+  });
+  const oldJizuReviewDialog = useDialog<any>({
+    done() {
+      refetchAll()
+    }
+  });
+  const jizuTestDialog = useDialog<any>({
+    done() {
+      refetchAll()
+    }
+  });
+  const stageTestDialog = useDialog<any>({
+    done() {
+      refetchAll()
+    }
+  });
+  const normalRepeatDialog = useDialog<any>({
+    done() {
+      refetchAll()
+    }
+  });
+  const heavyRepeatDialog = useDialog<any>({
+    done() {
+      refetchAll()
+    }
+  });
+  const tajweedLessonDialog = useDialog<any>({
+    done() {
+      refetchAll()
+    }
+  });
+  const permissionDialog = useDialog<any>({
+    done() {
+      refetchAll()
+    }
+  });
+  const notesDialog = useDialog<any>({
+    done() {
+      refetchAll()
+    }
+  });
 
   function addReport(formType: string) {
     menuDialog.setIsOpen(false)
@@ -166,8 +210,8 @@ const MainPage = () => {
       case 'PAGE_HAFZ':
         pageHafzDialog.openDialog({});
         break;
-      case 'JIZU_REVIEW':
-        jizuReviewDialog.openDialog({});
+      case 'CURRENT_JIZU_REVIEW':
+        currentJizuReviewDialog.openDialog({});
         break;
       case 'PREV_JIZU_REVIEW':
         prevJizuReviewDialog.openDialog({});
@@ -306,28 +350,33 @@ const MainPage = () => {
         إضافة تقرير
       </Button>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        {lastReportQuery.data?.calc_hifz &&
+        {/* حفظ الوجه */}
+        {currentReportQuery.data?.calc_hifz &&
           <div className="rounded-2xl report-card p-4 flex flex-col gap-2 items-center">
             <CheckRounded fontSize="large" />
             <span>حفظ الوجه</span>
-            <span>{first((lastReportQuery.data.calc_hifz || '').split('/'))}</span>
+            <span>{first((currentReportQuery.data.calc_hifz || '').split('/'))}</span>
           </div>
         }
-        {/* <div className="rounded-2xl report-card p-4 flex flex-col gap-2 items-center">
-          <CheckRounded fontSize="large" />
-          <span>مراجعة الحالي</span>
-          <span>ص342 - ص338</span>
-        </div> */}
-        {/* <div className="rounded-2xl report-card p-4 flex flex-col gap-2 items-center">
+        {/* مراجعة الحالي */}
+        {currentReportQuery.data?.current_from && currentReportQuery.data?.current_to &&
+          <div className="rounded-2xl report-card p-4 flex flex-col gap-2 items-center">
+            <CheckRounded fontSize="large" />
+            <span>مراجعة الحالي</span>
+            <span>{currentReportQuery.data?.current_from} - {currentReportQuery.data?.current_to}</span>
+          </div>}
+          {/* مراجعة السابق */}
+        {currentReportQuery.data?.previous && <div className="rounded-2xl report-card p-4 flex flex-col gap-2 items-center">
           <CheckRounded fontSize="large" />
           <span>مراجعة السابق</span>
-          <span>جزء 5</span>
-        </div> */}
-        {/* <div className="rounded-2xl report-card p-4 flex flex-col gap-2 items-center">
+          <span>جزء {currentReportQuery.data?.previous}</span>
+        </div>}
+        {/* مراجعة القديم */}
+        {currentReportQuery.data?.old && <div className="rounded-2xl report-card p-4 flex flex-col gap-2 items-center">
           <CheckRounded fontSize="large" />
           <span>مراجعة القديم</span>
-          <span>جزء 4</span>
-        </div> */}
+          <span>جزء {currentReportQuery.data?.old}</span>
+        </div>}
       </div>
 
       {/* اضافة تقرير */}
@@ -338,37 +387,37 @@ const MainPage = () => {
         <DialogContent>
           {!!userProfileQuery.data?.track && <Stack gap={1}>
             <DialogTitle>اضافة تقرير</DialogTitle>
-            {reportTrackMap[userProfileQuery.data.track as keyof typeof tracks].includes('PAGE_HAFZ') &&
+            {isReportAllowed(userProfileQuery.data?.track, "PAGE_HAFZ") &&
               <Button variant="contained" color="primary" onClick={() => { addReport("PAGE_HAFZ") }}>حفظ الوجه</Button>
             }
-            {reportTrackMap[userProfileQuery.data.track as keyof typeof tracks].includes('JIZU_REVIEW') &&
-              <Button variant="contained" color="primary" onClick={() => { addReport("JIZU_REVIEW") }}>مراجعة الحالي</Button>
+            {isReportAllowed(userProfileQuery.data?.track, "CURRENT_JIZU_REVIEW") &&
+              <Button variant="contained" color="primary" onClick={() => { addReport("CURRENT_JIZU_REVIEW") }}>مراجعة الحالي</Button>
             }
-            {reportTrackMap[userProfileQuery.data.track as keyof typeof tracks].includes('PREV_JIZU_REVIEW') &&
+            {isReportAllowed(userProfileQuery.data?.track, "PREV_JIZU_REVIEW") &&
               <Button variant="contained" color="primary" onClick={() => { addReport("PREV_JIZU_REVIEW") }}>مراجعة السابق</Button>
             }
-            {reportTrackMap[userProfileQuery.data.track as keyof typeof tracks].includes('OLD_JIZU_REVIEW') &&
+            {isReportAllowed(userProfileQuery.data?.track, "OLD_JIZU_REVIEW") &&
               <Button variant="contained" color="primary" onClick={() => { addReport("OLD_JIZU_REVIEW") }}>مراجعة القديم</Button>
             }
-            {reportTrackMap[userProfileQuery.data.track as keyof typeof tracks].includes('JIZU_TEST') &&
+            {isReportAllowed(userProfileQuery.data?.track, "JIZU_TEST") &&
               <Button variant="contained" color="primary" onClick={() => { addReport("JIZU_TEST") }}>عرض الاجزاء</Button>
             }
-            {reportTrackMap[userProfileQuery.data.track as keyof typeof tracks].includes('STAGE_TEST') &&
+            {isReportAllowed(userProfileQuery.data?.track, "STAGE_TEST") &&
               <Button variant="contained" color="primary" onClick={() => { addReport("STAGE_TEST") }}>العرض المرحلي</Button>
             }
-            {reportTrackMap[userProfileQuery.data.track as keyof typeof tracks].includes('NORMAL_REPEAT') &&
+            {isReportAllowed(userProfileQuery.data?.track, "NORMAL_REPEAT") &&
               <Button variant="contained" color="primary" onClick={() => { addReport("NORMAL_REPEAT") }}>التكرار العادي</Button>
             }
-            {reportTrackMap[userProfileQuery.data.track as keyof typeof tracks].includes('HEAVY_REPEAT') &&
+            {isReportAllowed(userProfileQuery.data?.track, "HEAVY_REPEAT") &&
               <Button variant="contained" color="primary" onClick={() => { addReport("HEAVY_REPEAT") }}>التكرار المكثف</Button>
             }
-            {reportTrackMap[userProfileQuery.data.track as keyof typeof tracks].includes('JIZU_LESSON') &&
+            {isReportAllowed(userProfileQuery.data?.track, "JIZU_LESSON") &&
               <Button variant="contained" color="primary" onClick={() => { addReport("JIZU_LESSON") }}>درس تجويد</Button>
             }
-            {reportTrackMap[userProfileQuery.data.track as keyof typeof tracks].includes('PERMISSION') &&
+            {isReportAllowed(userProfileQuery.data?.track, "PERMISSION") &&
               <Button variant="contained" color="primary" onClick={() => { addReport("PERMISSION") }}>غياب مع إستئذان</Button>
             }
-            {reportTrackMap[userProfileQuery.data.track as keyof typeof tracks].includes('NOTES') &&
+            {isReportAllowed(userProfileQuery.data?.track, "NOTES") &&
               <Button variant="contained" color="primary" onClick={() => { addReport("NOTES") }}>ملاحظات</Button>
             }
           </Stack>}
@@ -386,7 +435,10 @@ const MainPage = () => {
         <DialogTitle textAlign={'center'}>إضافة تقرير حفظ الوجه</DialogTitle>
         <Divider />
         <DialogContent>
-          <PageHafzReport params={{ memorizedPages: memorizesPagesQuery.data || [] }} done={pageHafzDialog.done} canceled={pageHafzDialog.canceled} />
+          <PageHafzReport params={{
+            memorizedPages: memorizesPagesQuery.data || [],
+            reportDate: currentDate,
+          }} done={pageHafzDialog.done} canceled={pageHafzDialog.canceled} />
         </DialogContent>
         <DialogActions>
         </DialogActions>
@@ -394,13 +446,13 @@ const MainPage = () => {
 
       {/* تقرير مراجعة الحالى */}
       <Dialog
-        open={jizuReviewDialog.isOpen}
-        onClose={jizuReviewDialog.done}
+        open={currentJizuReviewDialog.isOpen}
+        onClose={currentJizuReviewDialog.done}
       >
         <DialogTitle textAlign={'center'}>إضافة تقرير مراجعة الحالي</DialogTitle>
         <Divider />
         <DialogContent>
-          <ReviewJizuReport done={prevJizuReviewDialog.done} canceled={prevJizuReviewDialog.canceled} />
+          <ReviewCurrentJizuReport params={{ reportDate: currentDate }} done={currentJizuReviewDialog.done} canceled={currentJizuReviewDialog.canceled} />
         </DialogContent>
         <DialogActions>
         </DialogActions>
@@ -414,7 +466,7 @@ const MainPage = () => {
         <DialogTitle textAlign={'center'}>إضافة تقرير مراجعة السابق</DialogTitle>
         <Divider />
         <DialogContent>
-          <PrevJizuReviewReport done={prevJizuReviewDialog.done} canceled={prevJizuReviewDialog.canceled} />
+          <PrevJizuReviewReport params={{ reportDate: currentDate }} done={prevJizuReviewDialog.done} canceled={prevJizuReviewDialog.canceled} />
         </DialogContent>
         <DialogActions>
         </DialogActions>
@@ -428,7 +480,7 @@ const MainPage = () => {
         <DialogTitle textAlign={'center'}>إضافة تقرير مراجعة القديم</DialogTitle>
         <Divider />
         <DialogContent>
-          <ReviewOldJizuReport done={oldJizuReviewDialog.done} canceled={oldJizuReviewDialog.canceled} />
+          <ReviewOldJizuReport params={{ reportDate: currentDate }} done={oldJizuReviewDialog.done} canceled={oldJizuReviewDialog.canceled} />
         </DialogContent>
         <DialogActions>
         </DialogActions>
@@ -442,7 +494,7 @@ const MainPage = () => {
         <DialogTitle textAlign={'center'}>إضافة تقرير عرض الاجزاء</DialogTitle>
         <Divider />
         <DialogContent>
-          <TestJizuReport done={jizuTestDialog.done} canceled={jizuTestDialog.canceled} />
+          <TestJizuReport params={{ reportDate: currentDate }} done={jizuTestDialog.done} canceled={jizuTestDialog.canceled} />
         </DialogContent>
         <DialogActions>
         </DialogActions>
@@ -456,7 +508,7 @@ const MainPage = () => {
         <DialogTitle textAlign={'center'}>إضافة تقرير عرض مرحلي</DialogTitle>
         <Divider />
         <DialogContent>
-          <TestStageReport done={stageTestDialog.done} canceled={stageTestDialog.canceled} />
+          <TestStageReport params={{ reportDate: currentDate }} done={stageTestDialog.done} canceled={stageTestDialog.canceled} />
         </DialogContent>
         <DialogActions>
         </DialogActions>
@@ -470,7 +522,7 @@ const MainPage = () => {
         <DialogTitle textAlign={'center'}>إضافة تقرير تكرار عادي</DialogTitle>
         <Divider />
         <DialogContent>
-          <RepeatNormalReport done={normalRepeatDialog.done} canceled={normalRepeatDialog.canceled} />
+          <RepeatNormalReport params={{ reportDate: currentDate }} done={normalRepeatDialog.done} canceled={normalRepeatDialog.canceled} />
         </DialogContent>
         <DialogActions>
         </DialogActions>
@@ -484,7 +536,7 @@ const MainPage = () => {
         <DialogTitle textAlign={'center'}>إضافة تقرير تكرار</DialogTitle>
         <Divider />
         <DialogContent>
-          <RepeatHeavyReport done={heavyRepeatDialog.done} canceled={heavyRepeatDialog.canceled} />
+          <RepeatHeavyReport params={{ reportDate: currentDate }} done={heavyRepeatDialog.done} canceled={heavyRepeatDialog.canceled} />
         </DialogContent>
         <DialogActions>
         </DialogActions>
@@ -498,7 +550,7 @@ const MainPage = () => {
         <DialogTitle textAlign={'center'}>إضافة درس تجويد</DialogTitle>
         <Divider />
         <DialogContent>
-          <TajweedLessonReport done={tajweedLessonDialog.done} canceled={tajweedLessonDialog.canceled} />
+          <TajweedLessonReport params={{ reportDate: currentDate }} done={tajweedLessonDialog.done} canceled={tajweedLessonDialog.canceled} />
         </DialogContent>
         <DialogActions>
         </DialogActions>
@@ -512,7 +564,7 @@ const MainPage = () => {
         <DialogTitle textAlign={'center'}>إضافة إذن</DialogTitle>
         <Divider />
         <DialogContent>
-          <PermissionReport done={permissionDialog.done} canceled={permissionDialog.canceled} />
+          <PermissionReport params={{ reportDate: currentDate }} done={permissionDialog.done} canceled={permissionDialog.canceled} />
         </DialogContent>
         <DialogActions>
         </DialogActions>
@@ -526,7 +578,7 @@ const MainPage = () => {
         <DialogTitle textAlign={'center'}>إضافة ملاحظات</DialogTitle>
         <Divider />
         <DialogContent>
-          <NoteReport done={notesDialog.done} canceled={notesDialog.canceled} />
+          <NoteReport params={{ reportDate: currentDate }} done={notesDialog.done} canceled={notesDialog.canceled} />
         </DialogContent>
         <DialogActions>
         </DialogActions>
@@ -537,3 +589,8 @@ const MainPage = () => {
 };
 
 export default MainPage;
+
+function isReportAllowed(track: string, report: ReportType) {
+  return reportTrackMap[track as keyof typeof tracks].includes(report);
+}
+

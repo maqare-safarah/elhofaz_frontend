@@ -1,5 +1,5 @@
 import { QuranJizus } from '@/lib/quran-models';
-import { Box, Button, Checkbox, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, Stack, Typography } from '@mui/material'
+import { Box, Button, Checkbox, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, Stack, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -10,6 +10,7 @@ import { User } from '@/application-api/models/all-models';
 interface IProps {
     params: {
         memorizedPages: string[],
+        reportDate: string,
     },
     done: () => any,
     canceled: () => any,
@@ -25,7 +26,6 @@ function PageHafzReport(props: IProps) {
     })
 
     const [currentJizu, setCurrentJizu] = React.useState(15);
-    const [donePages, setDonePages] = React.useState<string[]>([]);
 
     function toggeleSelectedPage(page: string) {
         if (!selectedPages.includes(page)) {
@@ -40,15 +40,15 @@ function PageHafzReport(props: IProps) {
         mutationKey: ['save-report'],
         mutationFn: async () => {
             try {
-                await api.post('user/reports', {
+                await api.post('user/save_report', {
                     "type": "daily",
-                    "reported_at": new Date().toISOString().substring(0, 10),
+                    "reported_at": props.params.reportDate,
                     "day": "-",
                     "pages": JSON.stringify(selectedPages),
                     "teacher_id": "1",
-                    "amount_of_pages": "4",
+                    "amount_of_pages": selectedPages.length,
                 })
-            } catch(err) {
+            } catch (err) {
                 alert('هناك خطأ ما')
             }
         }
@@ -56,6 +56,9 @@ function PageHafzReport(props: IProps) {
 
     return (
         <Stack alignItems={'center'}>
+
+            <Typography fontWeight="bold" textAlign={'start'} className="w-full">تاريخ التقرير:</Typography>
+            <TextField disabled value={props.params.reportDate} fullWidth sx={{ mb: 2 }} />
             <Typography fontWeight="bold" textAlign={'start'} className="w-full">إختر الاوجه:</Typography>
             <Stack direction={'row'} justifyContent={'space-between'} className="w-full" mt={1}>
                 <Button variant="outlined" size="small" color="primary" onClick={() => {
@@ -105,9 +108,7 @@ function PageHafzReport(props: IProps) {
                     <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        // value={age}
                         label="Age"
-                    // onChange={handleChange}
                     >
                         {teachersQuery.data.map(teacher =>
                             <MenuItem key={teacher.id} value={teacher.id}>{teacher.name}</MenuItem>
@@ -117,7 +118,7 @@ function PageHafzReport(props: IProps) {
                 <Divider className="w-full" />
             </Stack>
             <Stack mt={2} direction={'row'}>
-                <Button variant="contained" color="primary" onClick={() => { saveReportMutation.mutate(); props.done() }} disabled={saveReportMutation.isPending}>حفظ التقرير</Button>
+                <Button onClick={() => { saveReportMutation.mutate(); props.done(); }} disabled={saveReportMutation.isPending} variant="contained" color="primary">حفظ التقرير</Button>
                 <Button onClick={props.canceled}>إلغاء</Button>
             </Stack>
         </Stack>
