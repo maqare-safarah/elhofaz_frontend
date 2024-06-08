@@ -166,6 +166,13 @@ export default function CharitableFund({ setting, data, setError, setLoading, se
                   account_name={setting.account_name} />
               </Container>
 
+
+              <Box m={3}>
+                <BankAccBox title="المبلغ المجموع حتى الان"
+                  account_number={setting.total_collection || 0}
+                  account_name={setting.total_collection_currency || 'جنيه سوداني'} />
+              </Box>
+
               <Divider sx={{ backgroundColor: 'white' }}></Divider>
 
               <Container sx={{
